@@ -3,7 +3,7 @@ import 'package:networking_in_flutter_dio/data/models/user_model.dart';
 import 'package:networking_in_flutter_dio/data/repository/user_repository.dart';
 import 'package:networking_in_flutter_dio/di/service_locator.dart';
 
-class HomeController {
+class HomeController with ChangeNotifier {
   // Repository.
   final userRepository = getIt.get<UserRepository>();
 
@@ -12,7 +12,9 @@ class HomeController {
   final jobController = TextEditingController();
 
   // Local variables.
-  final List<NewUser> newUsers = [];
+  final List<NewUser> _newUsers = [];
+
+  List<NewUser> get newUsers => _newUsers;
 
   // Methods.
   Future<List<UserModel>> getUsers() async {
@@ -26,7 +28,10 @@ class HomeController {
       jobController.text,
     );
 
-    newUsers.add(newlyAddedUser);
+    _newUsers.add(newlyAddedUser);
+
+    notifyListeners();
+
     return newlyAddedUser;
   }
 
@@ -36,13 +41,17 @@ class HomeController {
       name,
       job,
     );
-    newUsers[id] = updatedUser;
+    _newUsers[id] = updatedUser;
+
+    notifyListeners();
 
     return updatedUser;
   }
 
   Future<void> deleteUser(int id) async {
     await userRepository.deleteUserRequested(id);
-    newUsers.removeAt(id);
+    _newUsers.removeAt(id);
+
+    notifyListeners();
   }
 }

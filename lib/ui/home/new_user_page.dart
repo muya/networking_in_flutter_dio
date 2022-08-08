@@ -1,9 +1,11 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:networking_in_flutter_dio/data/models/user_model.dart';
-import 'package:networking_in_flutter_dio/di/service_locator.dart';
 import 'package:networking_in_flutter_dio/ui/home/add_user_form.dart';
 import 'package:networking_in_flutter_dio/ui/home/controller.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class NewUserPage extends StatefulWidget {
   const NewUserPage({Key? key}) : super(key: key);
@@ -13,23 +15,26 @@ class NewUserPage extends StatefulWidget {
 }
 
 class _NewUserPageState extends State<NewUserPage> {
-  final homeController = getIt.get<HomeController>();
 
   @override
   Widget build(BuildContext context) {
+    final homeController = context.read<HomeController>();
+
+    var newUsers = context.watch<HomeController>().newUsers;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Newly Added User'),
       ),
       body: ListView.builder(
-        itemCount: homeController.newUsers.length,
+        itemCount: newUsers.length,
         itemBuilder: (context, index) {
-          final NewUser user = homeController.newUsers[index];
+          final NewUser user = newUsers[index];
 
           return ListTile(
             onLongPress: () async {
               await homeController.deleteUser(index).then((value) {
-                setState(() {});
+                // setState(() {});
               }).then(
                 (value) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -57,7 +62,8 @@ class _NewUserPageState extends State<NewUserPage> {
                   )
                       .then((value) {
                     Navigator.pop(context);
-                    setState(() {});
+                    // Ensure that the details in the current view are updated.
+                    // setState(() {});
                   }).then((value) {
                     homeController.nameController.clear();
                     homeController.jobController.clear();
@@ -77,7 +83,11 @@ class _NewUserPageState extends State<NewUserPage> {
                 builder: (context) {
                   return userForm;
                 },
-              );
+              ).whenComplete(() {
+                developer.log('bottom sheet closed');
+                homeController.nameController.clear();
+                homeController.jobController.clear();
+              });
             },
             title: Text(user.name!),
             subtitle: Text(user.job!),

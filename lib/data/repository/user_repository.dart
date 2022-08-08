@@ -3,6 +3,8 @@ import 'package:networking_in_flutter_dio/data/models/user_model.dart';
 import 'package:networking_in_flutter_dio/data/network/api/dio_exception.dart';
 import 'package:networking_in_flutter_dio/data/network/api/user/user_api.dart';
 
+/// Repository handles conversion of data from a 'raw' format obtained from the
+/// API, into a format usable by the application.
 class UserRepository {
   final UserApi userApi;
 

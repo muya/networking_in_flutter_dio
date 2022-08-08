@@ -17,5 +17,5 @@ Future<void> setup() async {
   getIt.registerSingleton(UserApi(dioClient: getIt<DioClient>()));
   getIt.registerSingleton(UserRepository(getIt.get<UserApi>()));
 
-  getIt.registerSingleton(HomeController());
+  // getIt.registerSingleton(HomeController());
 }

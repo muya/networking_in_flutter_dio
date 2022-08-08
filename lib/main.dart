@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:networking_in_flutter_dio/themes/color_schemes.g.dart';
+import 'package:networking_in_flutter_dio/ui/home/controller.dart';
 import 'package:networking_in_flutter_dio/ui/home/home_page.dart';
 import 'package:networking_in_flutter_dio/di/service_locator.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   setup();
-  runApp(const MyApp());
+
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider<HomeController>(
+        create: (_) => HomeController(),
+      )
+    ], child: const MyApp(),)
+  );
+  
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

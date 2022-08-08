@@ -3,14 +3,15 @@ import 'package:networking_in_flutter_dio/di/service_locator.dart';
 import 'package:networking_in_flutter_dio/ui/home/add_user_form.dart';
 import 'package:networking_in_flutter_dio/ui/home/controller.dart';
 import 'package:networking_in_flutter_dio/ui/home/new_user_page.dart';
+import 'package:provider/provider.dart';
 
 class AddUserBtn extends StatelessWidget {
-  AddUserBtn({Key? key}) : super(key: key);
-
-  final homeController = getIt<HomeController>();
+  const AddUserBtn({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final homeController = context.read<HomeController>();
+
     onPressed() {
       showModalBottomSheet(
         context: context,
@@ -19,6 +20,7 @@ class AddUserBtn extends StatelessWidget {
             homeController: homeController,
             onSubmit: () async {
               await homeController.addNewUser();
+
               Navigator.pop(context);
               homeController.nameController.clear();
               homeController.jobController.clear();
